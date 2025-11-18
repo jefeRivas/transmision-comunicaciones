@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Transmisión | MMM Boston Medellín</title>
+    <!-- Incluir Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configuración personalizada de Tailwind para los colores -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-dark-blue': '#1F4A7C',
+                        'accent-yellow': '#FFD700',
+                        'highlight-blue': '#E0F2FE', /* Light blue for highlighting */
+                        'success-green': '#10B981', /* Emerald 500 */
+                        'error-red': '#EF4444', /* Red 500 */
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Estilos generales para el fondo del cuerpo */
+        body {
+            background-color: #f3f4f6; /* Gray 100 */
+        }
+
+        /* Estilo para comandos en línea */
+        .hotkey-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            background-color: #FEEBC8; /* Amber 100 */
+            color: #9A3412; /* Amber 800 */
+            font-family: 'Inter', monospace;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            margin: 0 2px;
+        }
+
+        /* Estilos específicos para la tabla de comandos */
+        #hotkeys-view table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        #hotkeys-view th, #hotkeys-view td {
+            padding: 0.75rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        #hotkeys-view th {
+            background-color: #E0F2FE; /* Light blue for header */
+            color: #1F4A7C; /* Dark blue text */
+        }
+
+        /* Oculta los elementos que no están activos */
+        .view-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .view-content.active {
+            display: block;
+            opacity: 1;
+        }
+        
+        /* Estilo para el menú de navegación en móvil */
+        .mobile-menu {
+            transition: transform 0.3s ease-out;
+            top: 0; /* Se ajustará dinámicamente con JS */
+            transform: translateY(-100%);
+        }
+        .mobile-menu.open {
+            transform: translateY(0);
+        }
+
+        /* Sombra para la cabecera fija */
+        .header-shadow {
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* Animación de carga (opcional para el quiz) */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #FFD700;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800">
+
+    <!-- Contenedor Principal (Centrado y con Sombra) -->
+    <div id="app-container" class="w-full max-w-5xl mx-auto bg-white shadow-xl rounded-b-xl overflow-hidden min-h-screen flex flex-col">
+        
+        <!-- Encabezado Fijo (Fixed Header) - Se extiende por todo el ancho de la pantalla -->
+        <div id="fixed-header-wrapper" class="fixed top-0 w-full z-50 bg-primary-dark-blue header-shadow">
+            <!-- Contenido del Header centrado y limitado a 5xl -->
+            <div class="max-w-5xl mx-auto">
+                <header id="main-header" class="text-white">
+                    <!-- Fila 1: Título y Botón Hamburguesa -->
+                    <div class="p-4 sm:px-6 sm:pt-6 sm:pb-3 flex justify-between items-center">
+                        <!-- Título (Siempre Visible) que funciona como botón de INICIO/RESUMEN -->
+                        <h1 id="home-button" class="text-xl sm:text-2xl font-extrabold cursor-pointer hover:text-accent-yellow transition duration-200">
+                            Manual de Transmisión
+                        </h1>
+                        
+                        <!-- Botón Hamburguesa (Visible SOLO en Móvil) -->
+                        <button id="mobile-menu-toggle" class="sm:hidden p-2 rounded-lg hover:bg-white/20 transition duration-200">
+                            <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                        </button>
+                    </div>
+
+                    <!-- Fila 2: Menú de Escritorio (Oculto en Móvil) -->
+                    <nav id="desktop-nav" class="hidden sm:flex justify-start px-6 pb-4 space-x-2 text-sm font-semibold border-t border-white/10 pt-2">
+                        <!-- Botones de Navegación -->
+                        <button class="nav-btn flex items-center px-3 py-2 rounded-lg transition duration-200 text-white hover:bg-white/10" data-view="hotkeys">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M6 8h.001"/><path d="M10 8h.001"/><path d="M14 8h.001"/><path d="M18 8h.001"/><path d="M8 12h.001"/><path d="M12 12h.001"/><path d="M16 12h.001"/><path d="M4 16h16"/></svg>
+                            COMANDOS
+                        </button>
+                        <button class="nav-btn flex items-center px-3 py-2 rounded-lg transition duration-200 text-white hover:bg-white/10" data-view="prep">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M8 13h8"/><path d="M8 17h8"/><path d="M8 9h8"/></svg>
+                            PREPARACIÓN
+                        </button>
+                        <button class="nav-btn flex items-center px-3 py-2 rounded-lg transition duration-200 text-white hover:bg-white/10" data-view="live_op">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><path d="M18 10a8 8 0 1 0-4.9 7.6l2 2v2"/><path d="M18 10V6"/><path d="M10 10v4"/></svg>
+                            EN VIVO
+                        </button>
+                        <button class="nav-btn flex items-center px-3 py-2 rounded-lg transition duration-200 text-white hover:bg-white/10" data-view="close">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07L13 7"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07L11 17"/></svg>
+                            FINALIZACIÓN
+                        </button>
+                        <button class="nav-btn flex items-center px-3 py-2 rounded-lg transition duration-200 text-white hover:bg-white/10" data-view="equipment">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><path d="M14.5 10c-.82 0-1.5-.7-1.5-1.5v-5A1.5 1.5 0 0 1 14.5 2h5A1.5 1.5 0 0 1 21 3.5v5c0 .82-.7 1.5-1.5 1.5"/><path d="M19 10a1 1 0 0 0 1 1h2"/><path d="M4.5 14c-.82 0-1.5-.7-1.5-1.5v-5A1.5 1.5 0 0 1 4.5 6h5A1.5 1.5 0 0 1 11 7.5v5c0 .82-.7 1.5-1.5 1.5"/><path d="M9 14a1 1 0 0 0 1 1h2"/><path d="M14.5 18c-.82 0-1.5-.7-1.5-1.5v-5A1.5 1.5 0 0 1 14.5 14h5A1.5 1.5 0 0 1 21 15.5v5c0 .82-.7 1.5-1.5 1.5"/><path d="M19 18a1 1 0 0 0 1 1h2"/><path d="M4.5 22c-.82 0-1.5-.7-1.5-1.5v-5A1.5 1.5 0 0 1 4.5 18h5A1.5 1.5 0 0 1 11 19.5v5c0 .82-.7 1.5-1.5 1.5"/><path d="M9 22a1 1 0 0 0 1 1h2"/></svg>
+                            EQUIPAMIENTO
+                        </button>
+                        <button class="nav-btn flex items-center px-3 py-2 rounded-lg transition duration-200 text-white hover:bg-white/10" data-view="quiz">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><path d="M14 2v6h6"/><path d="M15 16h-4"/><path d="M15 12h-4"/><path d="M11 20h-2"/></svg>
+                            EVALUACIÓN
+                        </button>
+                    </nav>
+                </header>
+            </div>
+        </div>
+
+        <!-- Menú Móvil Desplegable (También fijo, pero con z-index menor que el header) -->
+        <nav id="mobile-menu" class="mobile-menu fixed left-0 w-full bg-primary-dark-blue/95 p-4 z-40 shadow-lg sm:hidden">
+            <div class="flex flex-col space-y-2 text-base font-semibold text-white">
+                <!-- Botones del Menú Móvil -->
+                <button class="nav-btn text-left px-3 py-2 rounded-lg transition duration-200 w-full flex items-center hover:bg-white/20" data-view="hotkeys">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M6 8h.001"/><path d="M10 8h.001"/><path d="M14 8h.001"/><path d="M18 8h.001"/><path d="M8 12h.001"/><path d="M12 12h.001"/><path d="M16 12h.001"/><path d="M4 16h16"/></svg>
+                    COMANDOS DE TECLADO
+                </button>
+                <button class="nav-btn text-left px-3 py-2 rounded-lg transition duration-200 w-full flex items-center hover:bg-white/20" data-view="prep">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M8 13h8"/><path d="M8 17h8"/><path d="M8 9h8"/></svg>
+                    PREPARACIÓN INICIAL
+                </button>
+                <button class="nav-btn text-left px-3 py-2 rounded-lg transition duration-200 w-full flex items-center hover:bg-white/20" data-view="live_op">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M18 10a8 8 0 1 0-4.9 7.6l2 2v2"/><path d="M18 10V6"/><path d="M10 10v4"/></svg>
+                    OPERACIÓN EN VIVO
+                </button>
+                <button class="nav-btn text-left px-3 py-2 rounded-lg transition duration-200 w-full flex items-center hover:bg-white/20" data-view="close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07L13 7"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07L11 17"/></svg>
+                    FINALIZACIÓN DE LA TRANSMISIÓN
+                </button>
+                <button class="nav-btn text-left px-3 py-2 rounded-lg transition duration-200 w-full flex items-center hover:bg-white/20" data-view="equipment">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M14.5 10c-.82 0-1.5-.7-1.5-1.5v-5A1.5 1.5 0 0 1 14.5 2h5A1.5 1.5 0 0 1 21 3.5v5c0 .82-.7 1.5-1.5 1.5"/><path d="M19 10a1 1 0 0 0 1 1h2"/><path d="M4.5 14c-.82 0-1.5-.7-1.5-1.5v-5A1.5 1.5 0 0 1 4.5 6h5A1.5 1.5 0 0 1 11 7.5v5c0 .82-.7 1.5-1.5 1.5"/><path d="M9 14a1 1 0 0 0 1 1h2"/><path d="M14.5 18c-.82 0-1.5-.7-1.5-1.5v-5A1.5 1.5 0 0 1 14.5 14h5A1.5 1.5 0 0 1 21 15.5v5c0 .82-.7 1.5-1.5 1.5"/><path d="M19 18a1 1 0 0 0 1 1h2"/><path d="M4.5 22c-.82 0-1.5-.7-1.5-1.5v-5A1.5 1.5 0 0 1 4.5 18h5A1.5 1.5 0 0 1 11 19.5v5c0 .82-.7 1.5-1.5 1.5"/><path d="M9 22a1 1 0 0 0 1 1h2"/></svg>
+                    EQUIPAMIENTO
+                </button>
+                <button class="nav-btn text-left px-3 py-2 rounded-lg transition duration-200 w-full flex items-center hover:bg-white/20" data-view="quiz">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><path d="M14 2v6h6"/><path d="M15 16h-4"/><path d="M15 12h-4"/><path d="M11 20h-2"/></svg>
+                    EVALUACIÓN
+                </button>
+            </div>
+        </nav>
+
+        <!-- Espaciador para el Fixed Header -->
+        <div id="header-spacer" class="w-full">
+            <!-- La altura de este div se calcula con JavaScript -->
+        </div>
+
+        <!-- Contenido Principal Dinámico -->
+        <main id="content-container" class="p-4 sm:p-6 space-y-8 w-full">
+
+            <!-- 0. VISTA DE RESUMEN (INICIO) -->
+            <section id="summary-view" class="view-content bg-white p-6 rounded-xl shadow-md border-l-4 border-accent-yellow active">
+                <h2 class="text-3xl font-bold text-primary-dark-blue mb-4 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-accent-yellow"><path d="M3 3v18h18"/><path d="m18 9-6 6-9-9"/></svg>
+                    Guía de Operación Rápida vMix
+                </h2>
+                <p class="text-lg text-gray-700 mb-6">
+                    Este manual es la guía esencial para la operación de la plataforma de transmisión. Está dividido en fases claras para asegurar una transición fluida antes, durante y después del culto.
+                </p>
+                <h3 class="text-xl font-bold text-gray-800 mb-3">Flujo Operativo (5 Fases Clave)</h3>
+                <ul class="space-y-3 text-gray-700">
+                    <li class="p-3 bg-highlight-blue rounded-md border-l-4 border-primary-dark-blue">
+                        <span class="font-bold">COMANDOS DE TECLADO:</span> Referencia esencial de **Hotkeys** (<span class="hotkey-badge">T</span>, <span class="hotkey-badge">S</span>, <span class="hotkey-badge">F</span>, <span class="hotkey-badge">I</span>) para gráficos, videos y transiciones rápidas.
+                    </li>
+                    <li class="p-3 bg-highlight-blue rounded-md border-l-4 border-primary-dark-blue">
+                        <span class="font-bold">PREPARACIÓN INICIAL:</span> Encendido de equipos, conexión de radios y configuración de claves de streaming (Facebook/YouTube).
+                    </li>
+                    <li class="p-3 bg-highlight-blue rounded-md border-l-4 border-primary-dark-blue">
+                        <span class="font-bold">OPERACIÓN EN VIVO:</span> Coordinación con camarógrafos, control del ritmo de cambios (al menos 1/min) y monitoreo de audio y chat.
+                    </li>
+                    <li class="p-3 bg-highlight-blue rounded-md border-l-4 border-primary-dark-blue">
+                        <span class="font-bold">FINALIZACIÓN:</span> Proceso ordenado para el corte de señal (video de cierre, espera de 2 minutos, y detención del streaming).
+                    </li>
+                    <li class="p-3 bg-highlight-blue rounded-md border-l-4 border-primary-dark-blue">
+                        <span class="font-bold">EQUIPAMIENTO:</span> Detalle de los componentes del sistema (vMix, Blackmagic, Cámaras, etc.).
+                    </li>
+                </ul>
+            </section>
+
+            <!-- 1. COMANDOS DE TECLADO -->
+            <section id="hotkeys-view" class="view-content bg-white p-6 rounded-xl shadow-md">
+                <h2 class="text-2xl font-bold text-primary-dark-blue mb-4 border-b-2 pb-2 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-primary-dark-blue"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M6 8h.001"/><path d="M10 8h.001"/><path d="M14 8h.001"/><path d="M18 8h.001"/><path d="M8 12h.001"/><path d="M12 12h.001"/><path d="M16 12h.001"/><path d="M4 16h16"/></svg>
+                    Comandos de Teclado (<span class="font-bold">vMix Hotkeys</span>)
+                </h2>
+                <p class="text-gray-700 italic mb-4">Memoriza estas teclas para la operación rápida de textos y transiciones.</p>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200 bg-white border border-gray-200 rounded-lg shadow-inner">
+                        <thead>
+                            <tr>
+                                <th class="font-semibold w-1/5">Tecla</th>
+                                <th class="font-semibold w-3/5">Función</th>
+                                <th class="font-semibold w-1/5">Alcance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="font-mono text-lg font-bold bg-highlight-blue">T</td>
+                                <td>Poner Textos/Subtítulos (Titling Overlay)</td>
+                                <td>Stream y TVs Internas</td>
+                            </tr>
+                            <tr>
+                                <td class="font-mono text-lg font-bold bg-highlight-blue">S</td>
+                                <td>Quitar Textos/Subtítulos (Titling Overlay)</td>
+                                <td>Stream y TVs Internas</td>
+                            </tr>
+                            <tr>
+                                <td class="font-mono text-lg font-bold bg-highlight-blue">I</td>
+                                <td>Video de Intro (Inicio de Transmisión)</td>
+                                <td>Stream y TVs Internas</td>
+                            </tr>
+                            <tr>
+                                <td class="font-mono text-lg font-bold bg-highlight-blue">F</td>
+                                <td>Video de Cierre (Finalización)</td>
+                                <td>Stream y TVs Internas</td>
+                            </tr>
+                            <tr>
+                                <td class="font-mono text-lg">1</td>
+                                <td>Gráfico de Tema (Input 1)</td>
+                                <td>Stream y TVs Internas</td>
+                            </tr>
+                            <tr>
+                                <td class="font-mono text-lg">2</td>
+                                <td>Gráfico de Predicador (Input 2)</td>
+                                <td>Stream y TVs Internas</td>
+                            </tr>
+                            <tr>
+                                <td class="font-mono text-lg">3</td>
+                                <td>Gráfico de Dirección (Input 3)</td>
+                                <td>Stream y TVs Internas</td>
+                            </tr>
+                            <tr>
+                                <td class="font-mono text-lg">6</td>
+                                <td>Banner de Redes Sociales (Input 6)</td>
+                                <td>Stream y TVs Internas</td>
+                            </tr>
+                            <tr class="bg-red-50/50">
+                                <td class="font-mono text-lg bg-red-100">4</td>
+                                <td>Cámara Interna (Filtrada)</td>
+                                <td><span class="font-bold text-red-600">SOLO TVs Internas</span></td>
+                            </tr>
+                            <tr class="bg-red-50/50">
+                                <td class="font-mono text-lg bg-red-100">F5</td>
+                                <td>Vista Previa Interna</td>
+                                <td><span class="font-bold text-red-600">SOLO TVs Internas</span> (Preview a Output)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            
+            <!-- 2. PREPARACIÓN INICIAL -->
+            <section id="prep-view" class="view-content bg-white p-6 rounded-xl shadow-md">
+                <h2 class="text-2xl font-bold text-primary-dark-blue mb-4 border-b-2 pb-2 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-primary-dark-blue"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M8 13h8"/><path d="M8 17h8"/><path d="M8 9h8"/></svg>
+                    📝 Preparación Inicial (Checklist Pre-Culto)
+                </h2>
+                <p class="text-gray-700 font-semibold mb-4">Sigue estos 5 pasos antes de los T-5 minutos.</p>
+                <ol class="list-decimal list-outside space-y-4 ml-4 text-gray-700">
+                    <li>
+                        <span class="font-bold text-primary-dark-blue">Carga y Radios:</span> Poner a cargar los radios de comunicación y asegurar que los camarógrafos los tienen.
+                    </li>
+                    <li>
+                        <span class="font-bold text-primary-dark-blue">Encendido de Hardware:</span>
+                        <ul class="list-disc list-inside ml-4 text-sm mt-1 space-y-1">
+                            <li>Prender interruptores de energía.</li>
+                            <li>Prender el Computador de Transmisión (<span class="bg-highlight-blue text-primary-dark-blue font-semibold px-1 rounded-sm">vMix</span>).</li>
+                            <li>Prender el Computador de <span class="bg-highlight-blue text-primary-dark-blue font-semibold px-1 rounded-sm">Blackmagic</span>.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <span class="font-bold text-primary-dark-blue">Apertura de Software:</span>
+                        <ul class="list-disc list-inside ml-4 text-sm mt-1 space-y-1">
+                            <li>Abrir <span class="bg-highlight-blue text-primary-dark-blue font-semibold px-1 rounded-sm">vMix</span> (Comprobar entradas).</li>
+                            <li>Abrir control de <span class="bg-highlight-blue text-primary-dark-blue font-semibold px-1 rounded-sm">Blackmagic</span>.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <span class="font-bold text-primary-dark-blue">Configuración del Stream:</span> Configurar la transmisión para <span class="bg-yellow-100 text-gray-800 font-semibold px-1 rounded-sm">Facebook y YouTube</span> (URL y Llaves).
+                    </li>
+                    <li>
+                        <span class="font-bold text-primary-dark-blue">Metadatos Web:</span>
+                        <ul class="list-disc list-inside ml-4 text-sm mt-1 space-y-1">
+                            <li>Configurar título y descripción del evento.</li>
+                            <li>Configurar el <span class="font-semibold italic">thumbnail</span> de YouTube.</li>
+                        </ul>
+                    </li>
+                </ol>
+            </section>
+
+            <!-- 3. OPERACIÓN EN VIVO -->
+            <section id="live_op-view" class="view-content bg-white p-6 rounded-xl shadow-md">
+                <h2 class="text-2xl font-bold text-primary-dark-blue mb-4 border-b-2 pb-2 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-primary-dark-blue"><path d="M18 10a8 8 0 1 0-4.9 7.6l2 2v2"/><path d="M18 10V6"/><path d="M10 10v4"/></svg>
+                    📢 Operación en Vivo (Cambios, Comandos y Monitoreo)
+                </h2>
+                
+                <h3 class="font-bold text-xl text-primary-dark-blue mt-4 mb-2">3.1. Inicio de la Transmisión (Cronometrado)</h3>
+                <div class="overflow-x-auto mb-6">
+                    <table class="min-w-full divide-y divide-gray-200 bg-white border border-gray-200 rounded-lg">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Momento</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acción</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Detalle</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="hover:bg-yellow-50/50">
+                                <td class="px-3 py-2 whitespace-nowrap"><span class="bg-red-200 text-red-800 font-extrabold px-2 py-1 rounded-full text-xs">T-5 min</span></td>
+                                <td class="px-3 py-2 font-semibold">1. Iniciar Stream</td>
+                                <td class="px-3 py-2">Presionar <span class="hotkey-badge">Corriente</span> en <span class="hotkey-badge">vMix</span>.</td>
+                            </tr>
+                            <tr class="hover:bg-yellow-50/50">
+                                <td class="px-3 py-2 whitespace-nowrap"><span class="bg-red-200 text-red-800 font-extrabold px-2 py-1 rounded-full text-xs">T-5 min</span></td>
+                                <td class="px-3 py-2 font-semibold">2. Video Intro</td>
+                                <td class="px-3 py-2">Presionar la tecla <span class="hotkey-badge">I</span>.</td>
+                            </tr>
+                            <tr class="hover:bg-yellow-50/50">
+                                <td class="px-3 py-2 whitespace-nowrap"><span class="bg-green-200 text-green-800 font-extrabold px-2 py-1 rounded-full text-xs">T-0</span></td>
+                                <td class="px-3 py-2 font-semibold">3. Puesta en Vivo</td>
+                                <td class="px-3 py-2">Cambiar a la cámara del dirigente del culto.</td>
+                            </tr>
+                            <tr class="bg-yellow-100">
+                                <td class="px-3 py-2 whitespace-nowrap font-bold text-gray-700">Contingencia</td>
+                                <td class="px-3 py-2" colspan="2">Usar la imagen de <span class="font-mono text-primary-dark-blue bg-yellow-300 px-1 rounded-sm">"Lema de la Iglesia"</span> si hay fallos en las cámaras.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="font-bold text-xl text-primary-dark-blue mt-6 mb-2">3.2. Gestión de Cámaras y Cambios</h3>
+                <ul class="list-disc list-inside space-y-2 ml-4 text-gray-700">
+                    <li><span class="font-bold">Comunicación:</span> **CRÍTICO:** Mantener comunicación constante por <span class="font-semibold bg-gray-200 px-1 rounded-sm">radio</span> con los camarógrafos.</li>
+                    <li><span class="font-bold">Conteo:</span> Siempre indicar la cámara y contar: ("Voy con la Cámara [1/2] en <span class="font-bold text-red-500">3, 2, 1...</span>").</li>
+                    <li><span class="font-bold">Ritmo:</span> Cambiar las tomas al menos <span class="font-bold italic">una vez por minuto</span>.</li>
+                    <li><span class="font-bold">Tomas Auxiliares:</span> Máximo 5 a 8 segundos para la Cámara 2.</li>
+                </ul>
+                
+                <h3 class="font-bold text-xl text-primary-dark-blue mt-6 mb-2">3.3. Monitoreo y Gráficos</h3>
+                <ul class="list-disc list-inside space-y-2 ml-4 text-gray-700">
+                    <li><span class="font-bold">Gráficos:</span> Poner (<span class="hotkey-badge">T</span>) y quitar (<span class="hotkey-badge">S</span>) textos oportunamente.</li>
+                    <li><span class="font-bold">Contenido Auxiliar:</span> Priorizar <span class="bg-highlight-blue text-primary-dark-blue font-semibold px-1 rounded-sm">Holirix (Computador 3)</span>.</li>
+                    <li><span class="font-bold">Audio/Video:</span> Revisar la transmisión en el celular y verificar <span class="font-semibold bg-gray-200 px-1 rounded-sm">decibeles en vMix</span>.</li>
+                    <li><span class="font-bold">Chat de Redes:</span> Tomar nota de peticiones/saludos y <span class="font-bold text-red-500">eliminar comentarios no deseados.</span></li>
+                </ul>
+            </section>
+
+            <!-- 4. FINALIZACIÓN DE LA TRANSMISIÓN -->
+            <section id="close-view" class="view-content bg-white p-6 rounded-xl shadow-md">
+                <h2 class="text-2xl font-bold text-primary-dark-blue mb-4 border-b-2 pb-2 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-primary-dark-blue"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07L13 7"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07L11 17"/></svg>
+                    🛑 Finalización de la Transmisión
+                </h2>
+                <p class="text-gray-700 font-semibold mb-4">Asegura un corte ordenado y suave para el público en línea.</p>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200 bg-white border border-gray-200 rounded-lg">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Momento</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acción</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Detalle</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="hover:bg-yellow-50/50">
+                                <td class="px-3 py-2 whitespace-nowrap"><span class="bg-red-200 text-red-800 font-extrabold px-2 py-1 rounded-full text-xs">T-10 min</span></td>
+                                <td class="px-3 py-2 font-semibold">1. Señal de Fin</td>
+                                <td class="px-3 py-2">Prender la Luz Roja de aviso.</td>
+                            </tr>
+                            <tr class="hover:bg-yellow-50/50">
+                                <td class="px-3 py-2 whitespace-nowrap"><span class="bg-green-200 text-green-800 font-extrabold px-2 py-1 rounded-full text-xs">Fin Culto</span></td>
+                                <td class="px-3 py-2 font-semibold">2. Video de Cierre</td>
+                                <td class="px-3 py-2">Presionar la tecla <span class="hotkey-badge">F</span>.</td>
+                            </tr>
+                            <tr class="hover:bg-yellow-50/50">
+                                <td class="px-3 py-2 whitespace-nowrap"><span class="bg-green-200 text-green-800 font-extrabold px-2 py-1 rounded-full text-xs">2 min después</span></td>
+                                <td class="px-3 py-2 font-semibold">3. Detener Stream</td>
+                                <td class="px-3 py-2">Presionar <span class="hotkey-badge">Corriente</span> en vMix.</td>
+                            </tr>
+                            <tr class="hover:bg-yellow-50/50">
+                                <td class="px-3 py-2 whitespace-nowrap font-bold text-gray-700">Post-Culto</td>
+                                <td class="px-3 py-2 font-semibold">4. Saludos/Peticiones</td>
+                                <td class="px-3 py-2">Enviar nota con peticiones para ser mencionadas.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 5. EQUIPAMIENTO Y CONFIGURACIÓN -->
+            <section id="equipment-view" class="view-content bg-white p-6 rounded-xl shadow-md">
+                <h2 class="text-2xl font-bold text-primary-dark-blue mb-4 border-b-2 pb-2 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-primary-dark-blue"><path d="M14.5 10c-.82 0-1.5-.7-1.5-1.5v-5A1.5 1.5 0 0 1 14.5 2h5A1.5 1.5 0 0 1 21 3.5v5c0 .82-.7 1.5-1.5 1.5"/><path d="M19 10a1 1 0 0 0 1 1h2"/><path d="M4.5 14c-.82 0-1.5-.7-1.5-1.5v-5A1.5 1.5 0 0 1 4.5 6h5A1.5 1.5 0 0 1 11 7.5v5c0 .82-.7 1.5-1.5 1.5"/><path d="M9 14a1 1 0 0 0 1 1h2"/><path d="M14.5 18c-.82 0-1.5-.7-1.5-1.5v-5A1.5 1.5 0 0 1 14.5 14h5A1.5 1.5 0 0 1 21 15.5v5c0 .82-.7 1.5-1.5 1.5"/><path d="M19 18a1 1 0 0 0 1 1h2"/><path d="M4.5 22c-.82 0-1.5-.7-1.5-1.5v-5A1.5 1.5 0 0 1 4.5 18h5A1.5 1.5 0 0 1 11 19.5v5c0 .82-.7 1.5-1.5 1.5"/><path d="M9 22a1 1 0 0 0 1 1h2"/></svg>
+                    ⚙️ Equipamiento y Configuración del Sistema
+                </h2>
+                <p class="text-gray-700 mb-4">El sistema se basa en <span class="font-bold text-primary-dark-blue">vMix</span> como orquestador central, con las siguientes componentes:</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-gray-50 p-3 rounded-lg shadow-sm border border-gray-200">
+                        <h4 class="font-semibold text-primary-dark-blue mb-1">Computador de Transmisión</h4>
+                        <ul class="list-disc list-inside ml-2 text-sm text-gray-700">
+                            <li>Sistema principal (<span class="font-bold">vMix</span>).</li>
+                            <li>Dos tarjetas de video para manejo de entradas.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-3 rounded-lg shadow-sm border border-gray-200">
+                        <h4 class="font-semibold text-primary-dark-blue mb-1">Computador Blackmagic / Cámara 1</h4>
+                        <ul class="list-disc list-inside ml-2 text-sm text-gray-700">
+                            <li>Controla el Blackmagic Television Studio.</li>
+                            <li>La <span class="font-bold">Cámara 1 (Principal)</span> se conecta a través de este sistema.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-gray-50 p-3 rounded-lg shadow-sm border border-gray-200">
+                        <h4 class="font-semibold text-primary-dark-blue mb-1">Cámara 2 (Auxiliar)</h4>
+                        <ul class="list-disc list-inside ml-2 text-sm text-gray-700">
+                            <li>Cámara Sony (Entrada SDI).</li>
+                            <li>Ingresa por <span class="font-bold">SDI</span> a través de capturadoras de video.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-3 rounded-lg shadow-sm border border-gray-200">
+                        <h4 class="font-semibold text-primary-dark-blue mb-1">Textos y Gráficos</h4>
+                        <ul class="list-disc list-inside ml-2 text-sm text-gray-700">
+                            <li>Gestionado por <span class="font-bold">Holirix</span> (Computador 3).</li>
+                            <li>El contenido se ingesta directamente en <span class="font-bold">vMix</span>.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-gray-50 p-3 rounded-lg shadow-sm border border-gray-200">
+                        <h4 class="font-semibold text-primary-dark-blue mb-1">Audio</h4>
+                        <ul class="list-disc list-inside ml-2 text-sm text-gray-700">
+                            <li>Proviene de la consola.</li>
+                            <li>Pasa por el Blackmagic y entra a <span class="font-bold">vMix</span> con la Cámara 1.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-gray-50 p-3 rounded-lg shadow-sm border border-gray-200">
+                        <h4 class="font-semibold text-primary-dark-blue mb-1">Comunicación</h4>
+                        <ul class="list-disc list-inside ml-2 text-sm text-gray-700">
+                            <li>Uso de <span class="font-bold">Radios de Comunicación</span>.</li>
+                            <li>Esencial para coordinar con camarógrafos.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. EVALUACIÓN (CUESTIONARIO) -->
+            <section id="quiz-view" class="view-content bg-white p-6 rounded-xl shadow-md">
+                <h2 class="text-2xl font-bold text-primary-dark-blue mb-4 border-b-2 pb-2 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-primary-dark-blue"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><path d="M14 2v6h6"/><path d="M15 16h-4"/><path d="M15 12h-4"/><path d="M11 20h-2"/></svg>
+                    ✅ Evaluación de Conocimiento
+                </h2>
+                <p class="text-gray-700 italic mb-6">Confirma tu aprendizaje respondiendo las siguientes preguntas. Se requiere 80% para aprobar.</p>
+                
+                <form id="quiz-form" class="space-y-6">
+                    <!-- Las preguntas se inyectarán aquí por JavaScript -->
+                    <div id="quiz-questions" class="space-y-6">
+                        <!-- Loading indicator for initial load (optional) -->
+                        <div class="flex justify-center items-center py-12">
+                            <div class="spinner"></div>
+                            <p class="ml-3 text-gray-500">Cargando evaluación...</p>
+                        </div>
+                    </div>
+
+                    <div id="quiz-result-summary" class="hidden mt-8 p-4 border-2 rounded-lg bg-highlight-blue/50 text-center">
+                        <!-- El resumen final se inyectará aquí -->
+                    </div>
+
+                    <button type="submit" id="submit-quiz-btn" class="w-full bg-accent-yellow text-primary-dark-blue font-bold py-3 rounded-lg shadow-md hover:bg-yellow-500 transition duration-300 transform hover:scale-[1.01]">
+                        FINALIZAR EVALUACIÓN
+                    </button>
+                </form>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const QUIZ_QUESTIONS = [
+            {
+                question: "¿Cuál es la tecla rápida (Hotkey) para quitar los textos/subtítulos (Titling Overlay) en vMix?",
+                options: ["T", "S", "I", "F"],
+                answer: "S",
+                explanation: "La tecla 'S' es el comando asignado para desaparecer los textos y gráficos superpuestos (Overlay). 'T' los pone."
+            },
+            {
+                question: "¿Cuánto tiempo mínimo se debe esperar para detener el streaming después de presionar el video de cierre ('F')?",
+                options: ["Inmediatamente", "30 segundos", "2 minutos", "10 minutos"],
+                answer: "2 minutos",
+                explanation: "Se debe esperar 2 minutos después de usar el video de cierre ('F') para asegurar que la audiencia en línea haya tenido tiempo de desconectarse o ver el final."
+            },
+            {
+                question: "Durante la Operación en Vivo, ¿con qué frecuencia mínima se recomienda cambiar las tomas de cámara?",
+                options: ["Una vez cada 5 minutos", "Al menos una vez por minuto", "Solo cuando el predicador lo indique", "Solo en el inicio y el fin"],
+                answer: "Al menos una vez por minuto",
+                explanation: "El ritmo debe ser dinámico, con un cambio de toma al menos una vez por minuto para mantener el interés de la audiencia en línea."
+            },
+            {
+                question: "En la Preparación Inicial, ¿qué equipos de comunicación se deben cargar y asegurar antes del culto?",
+                options: ["Teléfonos celulares", "Radios de comunicación", "Walkie Talkies de reserva", "Ninguno, solo voz"],
+                answer: "Radios de comunicación",
+                explanation: "Es fundamental cargar y asegurar los radios de comunicación para mantener la coordinación crítica con los camarógrafos."
+            },
+            {
+                question: "¿Qué tecla se utiliza para lanzar el Video de Intro al inicio de la transmisión?",
+                options: ["T", "I", "1", "F"],
+                answer: "I",
+                explanation: "La tecla 'I' inicia el video de Introducción al comienzo de la transmisión."
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const homeButton = document.getElementById('home-button');
+            const navButtons = document.querySelectorAll('.nav-btn');
+            const viewContents = document.querySelectorAll('.view-content');
+            const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const fixedHeaderWrapper = document.getElementById('fixed-header-wrapper'); // El contenedor fijo
+            const headerSpacer = document.getElementById('header-spacer'); // El div espaciador
+
+            // Función CRÍTICA para ajustar la posición y el espaciado
+            function adjustLayout() {
+                // 1. Obtener la altura real del encabezado fijo
+                const headerHeight = fixedHeaderWrapper.offsetHeight;
+                
+                // 2. Aplicar esa altura al espaciador para empujar el contenido
+                headerSpacer.style.height = `${headerHeight}px`;
+
+                // 3. Ajustar la posición 'top' del menú móvil para que aparezca justo debajo del header fijo
+                mobileMenu.style.top = `${headerHeight}px`;
+            }
+
+            // Llamar al ajuste al cargar y al cambiar el tamaño de la ventana
+            adjustLayout();
+            window.addEventListener('resize', adjustLayout);
+
+
+            // Función para actualizar la vista
+            function updateView(newView) {
+                // 1. Ocultar todas las vistas
+                viewContents.forEach(content => {
+                    content.classList.remove('active');
+                });
+
+                // 2. Mostrar la vista solicitada
+                const targetView = document.getElementById(newView + '-view');
+                if (targetView) {
+                    targetView.classList.add('active');
+                    if (newView === 'quiz') {
+                        // Reiniciar el cuestionario cada vez que se abre la pestaña
+                        renderQuiz();
+                    }
+                }
+
+                // 3. Actualizar el estilo del botón activo (Desktop y Mobile)
+                navButtons.forEach(button => {
+                    const view = button.dataset.view;
+                    const isActive = view === newView;
+                    const isMobile = button.closest('#mobile-menu');
+
+                    // Resetear clases de color/fondo
+                    button.classList.remove('bg-accent-yellow', 'text-primary-dark-blue', 'text-white');
+                    
+                    if (isActive) {
+                        // Estilo activo: fondo amarillo, texto azul oscuro
+                        button.classList.add('bg-accent-yellow', 'text-primary-dark-blue');
+                        // En escritorio, quitamos el hover de texto blanco/fondo transparente para el activo
+                        if (!isMobile) {
+                             button.classList.remove('hover:bg-white/10', 'text-white');
+                        }
+                    } else {
+                        // Estilo inactivo
+                        if (!isMobile) {
+                            // Desktop: texto blanco, hover sutil
+                            button.classList.add('text-white', 'hover:bg-white/10');
+                        } else {
+                            // Mobile: texto blanco, hover de fondo oscuro
+                            button.classList.add('text-white', 'hover:bg-white/20');
+                        }
+                    }
+                });
+                
+                // 4. Cerrar el menú móvil y subir el scroll
+                mobileMenu.classList.remove('open');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // --- Lógica del Cuestionario ---
+            const quizForm = document.getElementById('quiz-form');
+            const quizQuestionsContainer = document.getElementById('quiz-questions');
+            const quizResultSummary = document.getElementById('quiz-result-summary');
+
+            function renderQuiz() {
+                quizQuestionsContainer.innerHTML = '';
+                quizResultSummary.classList.add('hidden');
+                document.getElementById('submit-quiz-btn').disabled = false;
+                document.getElementById('submit-quiz-btn').textContent = 'FINALIZAR EVALUACIÓN';
+
+                QUIZ_QUESTIONS.forEach((q, index) => {
+                    const questionHtml = `
+                        <div class="question-block p-4 border border-gray-200 rounded-lg shadow-sm" data-index="${index}">
+                            <p class="font-bold text-lg text-gray-800 mb-3">${index + 1}. ${q.question}</p>
+                            <div class="options-container space-y-2">
+                                ${q.options.map(option => `
+                                    <label class="block cursor-pointer p-3 bg-gray-50 hover:bg-highlight-blue rounded-md transition duration-150">
+                                        <input type="radio" name="question-${index}" value="${option}" class="mr-2 accent-primary-dark-blue">
+                                        ${option}
+                                    </label>
+                                `).join('')}
+                            </div>
+                            <div class="feedback-container mt-3 p-3 text-sm font-semibold hidden rounded-lg"></div>
+                        </div>
+                    `;
+                    quizQuestionsContainer.innerHTML += questionHtml;
+                });
+            }
+
+            function handleSubmit(event) {
+                event.preventDefault();
+                let correctCount = 0;
+                const totalQuestions = QUIZ_QUESTIONS.length;
+                const blocks = quizQuestionsContainer.querySelectorAll('.question-block');
+
+                // Validar y calificar
+                blocks.forEach(block => {
+                    const index = parseInt(block.dataset.index);
+                    const questionData = QUIZ_QUESTIONS[index];
+                    const selectedOption = block.querySelector(`input[name="question-${index}"]:checked`);
+                    const feedbackContainer = block.querySelector('.feedback-container');
+                    const optionsContainer = block.querySelector('.options-container');
+
+                    // Desactivar todas las opciones después de enviar
+                    optionsContainer.querySelectorAll('input[type="radio"]').forEach(radio => radio.disabled = true);
+
+                    feedbackContainer.classList.remove('hidden');
+                    feedbackContainer.innerHTML = '';
+                    block.classList.remove('border-error-red', 'border-success-green', 'border-gray-400');
+                    
+                    if (selectedOption) {
+                        const isCorrect = selectedOption.value === questionData.answer;
+                        
+                        if (isCorrect) {
+                            correctCount++;
+                            block.classList.add('border-success-green', 'border-l-4');
+                            feedbackContainer.innerHTML = `<span class="text-success-green">¡Correcto!</span>`;
+                            feedbackContainer.classList.add('bg-success-green/10');
+                            feedbackContainer.classList.remove('bg-error-red/10');
+
+                        } else {
+                            block.classList.add('border-error-red', 'border-l-4');
+                            feedbackContainer.innerHTML = `<span class="text-error-red">Incorrecto.</span> La respuesta correcta era: <span class="font-extrabold text-primary-dark-blue">${questionData.answer}</span>.`;
+                            feedbackContainer.classList.add('bg-error-red/10');
+                            feedbackContainer.classList.remove('bg-success-green/10');
+                        }
+
+                        // Resaltar la respuesta correcta y la incorrecta seleccionada
+                        optionsContainer.querySelectorAll('label').forEach(label => {
+                            const radio = label.querySelector('input');
+                            label.classList.remove('hover:bg-highlight-blue', 'bg-gray-50');
+
+                            if (radio.value === questionData.answer) {
+                                label.classList.add('bg-success-green/30', 'border-2', 'border-success-green');
+                            } else if (radio.checked && !isCorrect) {
+                                label.classList.add('bg-error-red/30', 'border-2', 'border-error-red');
+                            }
+                        });
+
+                    } else {
+                        // No contestada
+                        block.classList.add('border-gray-400', 'border-l-4');
+                        feedbackContainer.innerHTML = `<span class="text-gray-500">No contestado.</span> La respuesta correcta era: <span class="font-extrabold text-primary-dark-blue">${questionData.answer}</span>.`;
+                        feedbackContainer.classList.add('bg-gray-200/50');
+                        
+                        // Resaltar solo la respuesta correcta si no se seleccionó nada
+                        optionsContainer.querySelectorAll('label').forEach(label => {
+                            const radio = label.querySelector('input');
+                            label.classList.remove('hover:bg-highlight-blue', 'bg-gray-50');
+                            if (radio.value === questionData.answer) {
+                                label.classList.add('bg-success-green/30', 'border-2', 'border-success-green');
+                            }
+                        });
+                    }
+                });
+
+                // Calcular el resultado final
+                const scorePercentage = (correctCount / totalQuestions) * 100;
+                const passed = scorePercentage >= 80;
+                
+                quizResultSummary.classList.remove('hidden');
+                quizResultSummary.classList.remove('border-primary-dark-blue', 'border-error-red', 'border-success-green', 'bg-highlight-blue/50', 'bg-error-red/10', 'bg-success-green/10');
+
+                let resultMessage = '';
+                if (passed) {
+                    quizResultSummary.classList.add('border-success-green', 'bg-success-green/10');
+                    resultMessage = `<h3 class="text-2xl font-bold text-success-green mb-1">¡Felicidades, Aprobado!</h3>`;
+                } else {
+                    quizResultSummary.classList.add('border-error-red', 'bg-error-red/10');
+                    resultMessage = `<h3 class="text-2xl font-bold text-error-red mb-1">Necesitas Repasar</h3>`;
+                }
+
+                resultMessage += `<p class="text-xl text-gray-800">Obtuviste <span class="font-extrabold">${correctCount} de ${totalQuestions}</span> respuestas correctas.</p>`;
+                resultMessage += `<p class="text-3xl font-extrabold mt-2 ${passed ? 'text-success-green' : 'text-error-red'}">${scorePercentage.toFixed(0)}%</p>`;
+                
+                quizResultSummary.innerHTML = resultMessage;
+
+                document.getElementById('submit-quiz-btn').textContent = 'REINICIAR EVALUACIÓN';
+                document.getElementById('submit-quiz-btn').disabled = false;
+            }
+
+            // Manejador de clics para los botones de navegación
+            navButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const viewId = this.dataset.view;
+                    updateView(viewId);
+                });
+            });
+
+            // Manejador del botón de inicio (el título)
+            homeButton.addEventListener('click', () => {
+                updateView('summary');
+            });
+
+            // Manejador del menú hamburguesa
+            mobileMenuToggle.addEventListener('click', () => {
+                // Ajustamos la posición del menú móvil dinámicamente antes de abrir/cerrar (redundante, pero seguro)
+                adjustLayout(); 
+                mobileMenu.classList.toggle('open');
+            });
+
+            // Manejador del formulario del cuestionario
+            quizForm.addEventListener('submit', function(e) {
+                if (document.getElementById('submit-quiz-btn').textContent === 'REINICIAR EVALUACIÓN') {
+                    e.preventDefault();
+                    renderQuiz();
+                } else {
+                    handleSubmit(e);
+                }
+            });
+
+            // Inicializar la vista en 'summary' al cargar
+            updateView('summary');
+        });
+    </script>
+</body>
+</html>

@@ -197,7 +197,7 @@
             <section id="summary-view" class="view-content bg-white p-6 rounded-xl shadow-md border-l-4 border-accent-yellow active">
                 <h2 class="text-3xl font-bold text-primary-dark-blue mb-4 flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-accent-yellow"><path d="M3 3v18h18"/><path d="m18 9-6 6-9-9"/></svg>
-                    Guía de Operación Rápida vMix
+                    Guía de Operación Rápida
                 </h2>
                 <p class="text-lg text-gray-700 mb-6">
                     Este manual es la guía esencial para la operación de la plataforma de transmisión. Está dividido en fases claras para asegurar una transición fluida antes, durante y después del culto.
@@ -226,7 +226,7 @@
             <section id="hotkeys-view" class="view-content bg-white p-6 rounded-xl shadow-md">
                 <h2 class="text-2xl font-bold text-primary-dark-blue mb-4 border-b-2 pb-2 flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-primary-dark-blue"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M6 8h.001"/><path d="M10 8h.001"/><path d="M14 8h.001"/><path d="M18 8h.001"/><path d="M8 12h.001"/><path d="M12 12h.001"/><path d="M16 12h.001"/><path d="M4 16h16"/></svg>
-                    Comandos de Teclado (<span class="font-bold">vMix Hotkeys</span>)
+                    Comandos de Teclado vMix
                 </h2>
                 <p class="text-gray-700 italic mb-4">Memoriza estas teclas para la operación rápida de textos y transiciones.</p>
                 <div class="overflow-x-auto">
@@ -281,12 +281,12 @@
                             </tr>
                             <tr class="bg-red-50/50">
                                 <td class="font-mono text-lg bg-red-100">4</td>
-                                <td>Cámara Interna (Filtrada)</td>
+                                <td>Cámara 1 en TV (Filtrada)</td>
                                 <td><span class="font-bold text-red-600">SOLO TVs Internas</span></td>
                             </tr>
                             <tr class="bg-red-50/50">
                                 <td class="font-mono text-lg bg-red-100">F5</td>
-                                <td>Vista Previa Interna</td>
+                                <td>Vista Previa en TV</td>
                                 <td><span class="font-bold text-red-600">SOLO TVs Internas</span> (Preview a Output)</td>
                             </tr>
                         </tbody>
@@ -303,7 +303,7 @@
                 <p class="text-gray-700 font-semibold mb-4">Sigue estos 5 pasos antes de los T-5 minutos.</p>
                 <ol class="list-decimal list-outside space-y-4 ml-4 text-gray-700">
                     <li>
-                        <span class="font-bold text-primary-dark-blue">Carga y Radios:</span> Poner a cargar los radios de comunicación y asegurar que los camarógrafos los tienen.
+                        <span class="font-bold text-primary-dark-blue">Carga de Radios:</span> Poner a cargar los radios de comunicación desde que llegue al templo, al iniciar el servicio asegurarse que los camarógrafos los tengan.
                     </li>
                     <li>
                         <span class="font-bold text-primary-dark-blue">Encendido de Hardware:</span>
@@ -316,18 +316,25 @@
                     <li>
                         <span class="font-bold text-primary-dark-blue">Apertura de Software:</span>
                         <ul class="list-disc list-inside ml-4 text-sm mt-1 space-y-1">
-                            <li>Abrir <span class="bg-highlight-blue text-primary-dark-blue font-semibold px-1 rounded-sm">vMix</span> (Comprobar entradas).</li>
-                            <li>Abrir control de <span class="bg-highlight-blue text-primary-dark-blue font-semibold px-1 rounded-sm">Blackmagic</span>.</li>
+                            <li>Abrir aplicación <span class="bg-highlight-blue text-primary-dark-blue font-semibold px-1 rounded-sm">vMix</span> (Archivo llamado Transmision que está guardado en el escritorio).</li>
+                            <li>Abrir aplicación de control de <span class="bg-highlight-blue text-primary-dark-blue font-semibold px-1 rounded-sm">Blackmagic</span>.</li>
                         </ul>
                     </li>
                     <li>
-                        <span class="font-bold text-primary-dark-blue">Configuración del Stream:</span> Configurar la transmisión para <span class="bg-yellow-100 text-gray-800 font-semibold px-1 rounded-sm">Facebook y YouTube</span> (URL y Llaves).
+                        <span class="font-bold text-primary-dark-blue">Configuración del Stream:</span> Configurar la transmisión para <span class="bg-yellow-100 text-gray-800 font-semibold px-1 rounded-sm">Facebook y YouTube</span> (URL y Llaves) éstas están precargadas por defecto.
                     </li>
                     <li>
                         <span class="font-bold text-primary-dark-blue">Metadatos Web:</span>
                         <ul class="list-disc list-inside ml-4 text-sm mt-1 space-y-1">
-                            <li>Configurar título y descripción del evento.</li>
-                            <li>Configurar el <span class="font-semibold italic">thumbnail</span> de YouTube.</li>
+                            <li>Configurar título y descripción del evento. la descripción se encuentra predefinida para cada culto en un black de notas en el escritorio (copiar y pegar)</li>
+                            <li>Configurar el <span class="font-semibold italic">thumbnail</span> de YouTube (esto es la imagen miniaturta, hay una para cada culto).</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <span class="font-bold text-primary-dark-blue">Actualizar conexión con Holyrics:</span>
+                        <ul class="list-disc list-inside ml-4 text-sm mt-1 space-y-1">
+                            <li>Revisar que la IP que se tiene en Holirycs para los textos coincida con la ip configurada en las 3 entradas de texto de Vmix</li>
+                            <li>Si coinciden solo se le debe dar update a las entradas, en caso que no conincidan, se debe poner la IP correcta y luego dar update a la entrada.</li>
                         </ul>
                     </li>
                 </ol>
@@ -385,7 +392,6 @@
                 <h3 class="font-bold text-xl text-primary-dark-blue mt-6 mb-2">3.3. Monitoreo y Gráficos</h3>
                 <ul class="list-disc list-inside space-y-2 ml-4 text-gray-700">
                     <li><span class="font-bold">Gráficos:</span> Poner (<span class="hotkey-badge">T</span>) y quitar (<span class="hotkey-badge">S</span>) textos oportunamente.</li>
-                    <li><span class="font-bold">Contenido Auxiliar:</span> Priorizar <span class="bg-highlight-blue text-primary-dark-blue font-semibold px-1 rounded-sm">Holirix (Computador 3)</span>.</li>
                     <li><span class="font-bold">Audio/Video:</span> Revisar la transmisión en el celular y verificar <span class="font-semibold bg-gray-200 px-1 rounded-sm">decibeles en vMix</span>.</li>
                     <li><span class="font-bold">Chat de Redes:</span> Tomar nota de peticiones/saludos y <span class="font-bold text-red-500">eliminar comentarios no deseados.</span></li>
                 </ul>
@@ -414,20 +420,31 @@
                                 <td class="px-3 py-2">Prender la Luz Roja de aviso.</td>
                             </tr>
                             <tr class="hover:bg-yellow-50/50">
+                                <td class="px-3 py-2 whitespace-nowrap font-bold text-gray-700">Post-Culto</td>
+                                <td class="px-3 py-2 font-semibold">2. Saludos/Peticiones</td>
+                                <td class="px-3 py-2">Enviar nota con peticiones al grupo de comunicaciones en WhatsApp para ser mencionadas en el altar.</td>
+                            </tr>
+                            <tr class="hover:bg-yellow-50/50">
                                 <td class="px-3 py-2 whitespace-nowrap"><span class="bg-green-200 text-green-800 font-extrabold px-2 py-1 rounded-full text-xs">Fin Culto</span></td>
-                                <td class="px-3 py-2 font-semibold">2. Video de Cierre</td>
+                                <td class="px-3 py-2 font-semibold">3. Video de Cierre</td>
                                 <td class="px-3 py-2">Presionar la tecla <span class="hotkey-badge">F</span>.</td>
                             </tr>
                             <tr class="hover:bg-yellow-50/50">
                                 <td class="px-3 py-2 whitespace-nowrap"><span class="bg-green-200 text-green-800 font-extrabold px-2 py-1 rounded-full text-xs">2 min después</span></td>
-                                <td class="px-3 py-2 font-semibold">3. Detener Stream</td>
+                                <td class="px-3 py-2 font-semibold">4. Detener Stream</td>
                                 <td class="px-3 py-2">Presionar <span class="hotkey-badge">Corriente</span> en vMix.</td>
                             </tr>
                             <tr class="hover:bg-yellow-50/50">
                                 <td class="px-3 py-2 whitespace-nowrap font-bold text-gray-700">Post-Culto</td>
-                                <td class="px-3 py-2 font-semibold">4. Saludos/Peticiones</td>
-                                <td class="px-3 py-2">Enviar nota con peticiones para ser mencionadas.</td>
+                                <td class="px-3 py-2 font-semibold">5. Apagar equipos</td>
+                                <td class="px-3 py-2">Cerrar todos los programas (en vMix darle descartar cambios a la ventana emergente) y apagar los computadores e interruptores </td>
                             </tr>
+                            <tr class="hover:bg-yellow-50/50">
+                                <td class="px-3 py-2 whitespace-nowrap font-bold text-gray-700">Post-Culto</td>
+                                <td class="px-3 py-2 font-semibold">6. Finalizar servicio</td>
+                                <td class="px-3 py-2">Asegurarse que todos los equipos esten apagados y cubiertos(computadores, plantas, luz roja, interruptores), los TV desconectados, recibir y guardar los radios y chalecos.</td>
+                            </tr>
+                            
                         </tbody>
                     </table>
                 </div>
@@ -469,7 +486,7 @@
                     <div class="bg-gray-50 p-3 rounded-lg shadow-sm border border-gray-200">
                         <h4 class="font-semibold text-primary-dark-blue mb-1">Textos y Gráficos</h4>
                         <ul class="list-disc list-inside ml-2 text-sm text-gray-700">
-                            <li>Gestionado por <span class="font-bold">Holirix</span> (Computador 3).</li>
+                            <li>Gestionado por <span class="font-bold">Holyrics</span> (Computador 3).</li>
                             <li>El contenido se ingesta directamente en <span class="font-bold">vMix</span>.</li>
                         </ul>
                     </div>
@@ -790,4 +807,5 @@
         });
     </script>
 </body>
+
 </html>

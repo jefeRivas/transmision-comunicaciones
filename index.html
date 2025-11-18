@@ -542,37 +542,98 @@
 
     <script>
         const QUIZ_QUESTIONS = [
-            {
-                question: "¿Cuál es la tecla rápida (Hotkey) para quitar los textos/subtítulos (Titling Overlay) en vMix?",
-                options: ["T", "S", "I", "F"],
-                answer: "S",
-                explanation: "La tecla 'S' es el comando asignado para desaparecer los textos y gráficos superpuestos (Overlay). 'T' los pone."
-            },
-            {
-                question: "¿Cuánto tiempo mínimo se debe esperar para detener el streaming después de presionar el video de cierre ('F')?",
-                options: ["Inmediatamente", "30 segundos", "2 minutos", "10 minutos"],
-                answer: "2 minutos",
-                explanation: "Se debe esperar 2 minutos después de usar el video de cierre ('F') para asegurar que la audiencia en línea haya tenido tiempo de desconectarse o ver el final."
-            },
-            {
-                question: "Durante la Operación en Vivo, ¿con qué frecuencia mínima se recomienda cambiar las tomas de cámara?",
-                options: ["Una vez cada 5 minutos", "Al menos una vez por minuto", "Solo cuando el predicador lo indique", "Solo en el inicio y el fin"],
-                answer: "Al menos una vez por minuto",
-                explanation: "El ritmo debe ser dinámico, con un cambio de toma al menos una vez por minuto para mantener el interés de la audiencia en línea."
-            },
-            {
-                question: "En la Preparación Inicial, ¿qué equipos de comunicación se deben cargar y asegurar antes del culto?",
-                options: ["Teléfonos celulares", "Radios de comunicación", "Walkie Talkies de reserva", "Ninguno, solo voz"],
-                answer: "Radios de comunicación",
-                explanation: "Es fundamental cargar y asegurar los radios de comunicación para mantener la coordinación crítica con los camarógrafos."
-            },
-            {
-                question: "¿Qué tecla se utiliza para lanzar el Video de Intro al inicio de la transmisión?",
-                options: ["T", "I", "1", "F"],
-                answer: "I",
-                explanation: "La tecla 'I' inicia el video de Introducción al comienzo de la transmisión."
-            }
-        ];
+    {
+        question: "¿Cuál es la tecla rápida (Hotkey) para quitar los textos/subtítulos (Titling Overlay) en vMix?",
+        options: ["T", "S", "I", "F"],
+        answer: "S",
+        explanation: "La tecla 'S' es el comando asignado para desaparecer los textos y gráficos superpuestos (Overlay). 'T' los pone."
+    },
+    {
+        question: "¿Cuánto tiempo mínimo se debe esperar para detener el streaming después de presionar el video de cierre ('F')?",
+        options: ["Inmediatamente", "30 segundos", "2 minutos", "10 minutos"],
+        answer: "2 minutos",
+        explanation: "Se debe esperar 2 minutos después de usar el video de cierre ('F') para asegurar que la audiencia en línea haya tenido tiempo de desconectarse o ver el final."
+    },
+    {
+        question: "Durante la Operación en Vivo, ¿con qué frecuencia mínima se recomienda cambiar las tomas de cámara?",
+        options: ["Una vez cada 5 minutos", "Al menos una vez por minuto", "Solo cuando el predicador lo indique", "Solo en el inicio y el fin"],
+        answer: "Al menos una vez por minuto",
+        explanation: "El ritmo debe ser dinámico, con un cambio de toma al menos una vez por minuto para mantener el interés de la audiencia en línea."
+    },
+    {
+        question: "En la Preparación Inicial, ¿qué equipos de comunicación se deben cargar y asegurar antes del culto?",
+        options: ["Teléfonos celulares", "Radios de comunicación", "Walkie Talkies de reserva", "Ninguno, solo voz"],
+        answer: "Radios de comunicación",
+        explanation: "Es fundamental cargar y asegurar los radios de comunicación para mantener la coordinación crítica con los camarógrafos."
+    },
+    {
+        question: "¿Qué tecla se utiliza para lanzar el Video de Intro al inicio de la transmisión?",
+        options: ["T", "I", "1", "F"],
+        answer: "I",
+        explanation: "La tecla 'I' inicia el video de Introducción al comienzo de la transmisión."
+    },
+    // --- 10 PREGUNTAS ADICIONALES ---
+    {
+        question: "¿Cuál es el software utilizado en el Computador 3 para exponer textos y contenido web que se ingesta en vMix?",
+        options: ["OBS Studio", "Blackmagic Software", "Holirix", "PowerPoint"],
+        answer: "Holirix",
+        explanation: "El Computador 3 utiliza Holirix específicamente para generar los textos y gráficos que vMix integra en la transmisión."
+    },
+    {
+        question: "¿Qué señal de video lleva consigo el Audio que entra al vMix?",
+        options: ["Cámara 2", "Solo Audio (separado)", "Señal de Blackmagic / Cámara 1", "Gráficos de Holirix"],
+        answer: "Señal de Blackmagic / Cámara 1",
+        explanation: "El audio pasa por la consola, luego por el Blackmagic y entra al vMix junto con la señal de la Cámara 1."
+    },
+    {
+        question: "¿Qué acción se debe realizar a T-5 minutos, inmediatamente antes de lanzar el video de Intro ('I')?",
+        options: ["Poner la imagen de 'Lema'", "Configurar el título de YouTube", "Presionar 'Corriente' en vMix", "Llamar a los camarógrafos"],
+        answer: "Presionar 'Corriente' en vMix",
+        explanation: "A T-5 minutos se debe presionar 'Corriente' en vMix para iniciar la transmisión en Facebook y YouTube antes de lanzar cualquier contenido."
+    },
+    {
+        question: "¿Cuál es la duración máxima recomendada para las Tomas Auxiliares provenientes de la Cámara 2?",
+        options: ["5 a 8 segundos", "15 a 20 segundos", "No hay límite de tiempo", "Más de 30 segundos"],
+        answer: "5 a 8 segundos",
+        explanation: "Las tomas auxiliares se deben usar de forma breve, no más de 5 a 8 segundos, para no distraer y mantener el enfoque en la toma principal."
+    },
+    {
+        question: "¿Cuál es la tecla rápida (Hotkey) que muestra el Banner de Redes Sociales?",
+        options: ["1", "3", "6", "F5"],
+        answer: "6",
+        explanation: "La tecla '6' está asignada específicamente para mostrar el Banner de invitación a seguir en Facebook y YouTube."
+    },
+    {
+        question: "¿Qué tecla se utiliza para mostrar la Vista Previa (Preview) de vMix en los televisores internos SIN afectar la transmisión en vivo?",
+        options: ["T", "S", "F5", "4"],
+        answer: "F5",
+        explanation: "El Hotkey F5 envía el contenido del Preview a los televisores internos de la iglesia sin que la audiencia en línea lo vea."
+    },
+    {
+        question: "¿En caso de Contingencia al inicio, si la imagen de ambas cámaras es mala, ¿qué imagen se debe usar como respaldo?",
+        options: ["Pantalla negra", "Video de Cierre ('F')", "Imagen de 'Lema de la Iglesia'", "Gráfico del Predicador ('2')"],
+        answer: "Imagen de 'Lema de la Iglesia'",
+        explanation: "El 'Lema de la Iglesia' es la imagen de respaldo designada si ninguna cámara proporciona un buen encuadre o imagen de inicio."
+    },
+    {
+        question: "¿Cuál es el propósito de usar la tecla '4' (Cámara Interna Filtrada)?",
+        options: ["Mostrar el *stream* a la congregación", "Activar la Cámara 2", "Mostrar SOLAMENTE la Cámara 1 en televisores internos", "Poner un fondo fijo"],
+        answer: "Mostrar SOLAMENTE la Cámara 1 en televisores internos",
+        explanation: "La tecla '4' está diseñada para enviar la Cámara 1 a los televisores internos, evitando que tomas alternativas (como la 2) distraigan a la congregación."
+    },
+    {
+        question: "¿Qué paso se debe hacer T-10 minutos antes del final del servicio para informar a la congregación?",
+        options: ["Enviar la nota de saludos", "Poner el video de cierre", "Prender la Luz Roja", "Detener el chat"],
+        answer: "Prender la Luz Roja",
+        explanation: "La Luz Roja se enciende a T-10 minutos como señal visual para indicar que la finalización del servicio está cerca."
+    },
+    {
+        question: "Como tarea adicional, ¿qué se debe hacer con las peticiones de oración y saludos recopilados del chat?",
+        options: ["Eliminarlos inmediatamente", "Archivarlos y no usarlos", "Tomar nota y mencionarlos al finalizar el culto", "Responderlos individualmente en el chat"],
+        answer: "Tomar nota y mencionarlos al finalizar el culto",
+        explanation: "El operador debe tomar nota de las peticiones y saludos para que sean mencionados en el templo al finalizar el culto."
+    }
+];
 
         document.addEventListener('DOMContentLoaded', () => {
             const homeButton = document.getElementById('home-button');
@@ -809,3 +870,4 @@
 </body>
 
 </html>
+
